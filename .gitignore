@@ -3,6 +3,6 @@
 *.RData
 .Ruserdata
 *.Rproj
-*.csv
+weights.csv
 *.xlsx
 anonymize.R
