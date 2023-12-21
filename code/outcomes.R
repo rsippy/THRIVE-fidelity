@@ -7,13 +7,12 @@
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-library(readxl)
 library(tidyverse)
 library(extrafont)
 library(RColorBrewer)
 
 # import dataset
-fidelity <- read_excel("data/Recoded_fidelity_2022_v2.xlsx") 
+fidelity <- read.csv("data/fidelity.csv", na.strings = ".") 
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ## 1 Creating new variables & restructuring data
@@ -26,108 +25,108 @@ fidelity <- read_excel("data/Recoded_fidelity_2022_v2.xlsx")
 ## score for each variable. 
 Fidelity1 <- fidelity %>% 
   rowwise() %>% ## averaging the raters to create an average rating per principle per site. 
-  mutate(Bexley_BL_iTHR = mean(c(Anna_Bexley_BL,
-                                 Ollie_Bexley_BL), na.rm = TRUE)) %>%
-  mutate(Bexley_FU_iTHR = mean(c(Kate_Bexley_FU,
-                                 Ollie_Anna_Bexley_FU), na.rm = TRUE)) %>%
-  mutate(CambPeter_BL_iTHR = mean(c(Lida_CambPet_BL,
-                                    Niran_CambPet_BL))) %>%
-  mutate(CambPeter_FU_iTHR = mean(c(Lida_CambPet_FU,
-                                    Niran_CambPet_FU))) %>%
-  mutate(Camden_BL_iTHR = mean(c(Anna_Camden_BL, Lida_Camden_BL, 
-                                 Niran_Camden_BL, Ollie_Camden_BL))) %>%
-  mutate(Camden_FU_iTHR = mean(c(Lida_Camden_FU, 
-                                 Niran_Camden_FU))) %>%
-  mutate(Herts_BL_iTHR = mean(c(Anna_Herts_BL, Niran_Herts_BL,
-                                Lida_Herts_BL, Ollie_Herts_BL))) %>%
-  mutate(Herts_FU_iTHR = mean(c(Anna_Herts_FU,
-                                Ollie_Herts_FU))) %>%
-  mutate(Luton_BL_iTHR = mean(c(Lida_Luton_BL, 
-                                Niran_Luton_BL))) %>%
-  mutate(Luton_FU_iTHR = mean(c(Lida_Luton_FU, 
-                                Niran_Luton_FU))) %>%
-  mutate(MancSal_BL_iTHR = mean(c(Anna_MancSal_BL, 
-                                  Ollie_MancSal_BL))) %>%
-  mutate(MancSal_FU_iTHR = mean(c(Anna_MancSal_FU,
-                                  Ollie_MancSal_FU))) %>%
-  mutate(Stockport_BL_iTHR = mean(c(Anna_Stockport_BL, 
-                                    Ollie_Stockport_BL))) %>%
-  mutate(Stockport_FU_iTHR = mean(c(Anna_Kate_Stockport_FU, 
-                                    Ollie_Stockport_FU))) %>%
-  mutate(TowerHam_BL_iTHR = mean(c(Lida_TowerHamlets_BL, 
-                                   Niran_TowerHamlets_BL))) %>%
-  mutate(TowerHam_FU_iTHR = mean(c(Ollie_TowerHamlets_FU, 
-                                   Niran_TowerHamlets_FU))) %>%
-  mutate(WalthamF_BL_iTHR = mean(c(Anna_Waltham_BL, 
-                                   Ollie_Waltham_BL))) %>%
-  mutate(WalthamF_FU_iTHR = mean(c(Ollie_Waltham_FU, 
-                                   Kate_Waltham_FU))) %>%
-  mutate(Warrington_BL_iTHR = mean(c(Ollie_Warrington_BL, 
-                                     Niran_Warrington_BL))) %>%
-  mutate(Warrington_FU_iTHR = mean(c(Ollie_Warrington_FU, 
-                                     Niran_Warrington_FU))) %>%
-  mutate(Bradford_BL_Ctrl = mean(c(Anna_Bradford_BL, Niran_Bradford_BL,
-                                   Lida_Bradford_BL, Ollie_Bradford_BL))) %>%
-  mutate(Bradford_FU_Ctrl = mean(c(Ollie_Bradford_FU,
-                                   Niran_Bradford_FU))) %>%
-  mutate(EastSuff_BL_Ctrl = mean(c(Niran_EastSuffolk_BL, 
-                                   Lida_EastSuffolk_BL))) %>%
-  mutate(EastSuff_FU_Ctrl = mean(c(Lida_EastSuffolk_FU, 
-                                   Niran_EastSuffolk_FU))) %>%
-  mutate(Lewisham_BL_Ctrl = mean(c(Niran_Lewisham_BL,
-                                   Lida_Lewisham_BL))) %>%
-  mutate(Lewisham_FU_Ctrl = mean(c(Niran_Lewisham_FU,
-                                   Lida_Lewisham_FU))) %>%
-  mutate(NeneCorby_BL_Ctrl = mean(c(Anna_NeneCorby_BL,
-                                    Ollie_NeneCorby_BL))) %>%
-  mutate(NeneCorby_FU_Ctrl = mean(c(Anna_Kate_NeneCorby_FU,
-                                    Ollie_NeneCorby_FU))) %>%
-  mutate(Norfolk_BL_Ctrl = mean(c(Lida_Norfolk_BL,
-                                  Niran_Norfolk_BL))) %>%
-  mutate(Norfolk_FU_Ctrl = mean(c(Ollie_Norfolk_FU,
-                                  Niran_Norfolk_FU), na.rm = TRUE)) %>%
-  mutate(Portsmouth_BL_Ctrl = mean(c(Anna_Portsmouth_BL, Lida_Portsmouth_BL,
-                                     Niran_Portsmouth_BL, Ollie_Portsmouth_BL))) %>%
-  mutate(Portsmouth_FU_Ctrl = mean(c(Kate_Portsmouth_FU, 
-                                     Ollie_Portsmouth_FU))) %>%
-  mutate(SouthHam_BL_Ctrl = mean(c(Anna_Southampton_BL,
-                                   Ollie_Southampton_BL))) %>%
-  mutate(SouthHam_FU_Ctrl = mean(c(Ollie_Southampton_FU, 
-                                   Niran_Southampton_FU))) %>%
-  mutate(Stoke_BL_Ctrl = mean(c(Lida_Stoke_BL,
-                                Niran_Stoke_BL), na.rm = TRUE)) %>%
-  mutate(Stoke_FU_Ctrl = mean(c(Ollie_Stoke_FU,
-                                Niran_Stoke_FU))) %>%
-  mutate(Sunderland_BL_Ctrl = mean(c(Anna_Sunderland_BL,
-                                     Ollie_Sunderland_BL))) %>%
-  mutate(Sunderland_FU_Ctrl = mean(c(Ollie_Sunderland_FU,
-                                     Niran_Sunderland_FU))) %>%
-  mutate(Worcester_BL_Ctrl = mean(c(Anna_Worcester_BL,
-                                    Ollie_Worcester_BL))) %>%
-  mutate(Worcester_FU_Ctrl = mean(c(Ollie_Worcester_FU,
-                                    Niran_Worcester_FU))) %>%
-  dplyr::select(iTHRIVE_principle, Level, Bexley_BL_iTHR, Bexley_FU_iTHR, CambPeter_BL_iTHR, 
-                CambPeter_FU_iTHR, Camden_BL_iTHR, Camden_FU_iTHR, Herts_BL_iTHR, 
-                Herts_FU_iTHR, Luton_BL_iTHR, Luton_FU_iTHR,MancSal_BL_iTHR,
-                MancSal_FU_iTHR, Stockport_BL_iTHR, Stockport_FU_iTHR, TowerHam_BL_iTHR,
-                TowerHam_FU_iTHR, WalthamF_BL_iTHR, WalthamF_FU_iTHR, Warrington_BL_iTHR,
-                Warrington_FU_iTHR, Bradford_BL_Ctrl, Bradford_FU_Ctrl, 
-                EastSuff_BL_Ctrl, EastSuff_FU_Ctrl,
-                Lewisham_BL_Ctrl, Lewisham_FU_Ctrl, NeneCorby_BL_Ctrl, 
-                NeneCorby_FU_Ctrl, Norfolk_BL_Ctrl, 
-                Norfolk_FU_Ctrl, Portsmouth_BL_Ctrl, Portsmouth_FU_Ctrl, 
-                SouthHam_BL_Ctrl, SouthHam_FU_Ctrl,
-                Stoke_BL_Ctrl, Stoke_FU_Ctrl, Sunderland_BL_Ctrl, Sunderland_FU_Ctrl, 
-                Worcester_BL_Ctrl, Worcester_FU_Ctrl)
+  mutate(s11_BL_iTHR = mean(c(Anna_11_BL,
+                                 Ollie_11_BL), na.rm = TRUE)) %>%
+  mutate(s11_FU_iTHR = mean(c(Kate_11_FU,
+                                 Ollie_Anna_11_FU), na.rm = TRUE)) %>%
+  mutate(s12_BL_iTHR = mean(c(Lida_12_BL,
+                                    Niran_12_BL))) %>%
+  mutate(s12_FU_iTHR = mean(c(Lida_12_FU,
+                                    Niran_12_FU))) %>%
+  mutate(s13_BL_iTHR = mean(c(Anna_13_BL, Lida_13_BL, 
+                                 Niran_13_BL, Ollie_13_BL))) %>%
+  mutate(s13_FU_iTHR = mean(c(Lida_13_FU, 
+                                 Niran_13_FU))) %>%
+  mutate(s14_BL_iTHR = mean(c(Anna_14_BL, Niran_14_BL,
+                                Lida_14_BL, Ollie_14_BL))) %>%
+  mutate(s14_FU_iTHR = mean(c(Anna_14_FU,
+                                Ollie_14_FU))) %>%
+  mutate(s15_BL_iTHR = mean(c(Lida_15_BL, 
+                                Niran_15_BL))) %>%
+  mutate(s15_FU_iTHR = mean(c(Lida_15_FU, 
+                                Niran_15_FU))) %>%
+  mutate(s16_BL_iTHR = mean(c(Anna_16_BL, 
+                                  Ollie_16_BL))) %>%
+  mutate(s16_FU_iTHR = mean(c(Anna_16_FU,
+                                  Ollie_16_FU))) %>%
+  mutate(s17_BL_iTHR = mean(c(Anna_17_BL, 
+                                    Ollie_17_BL))) %>%
+  mutate(s17_FU_iTHR = mean(c(Anna_Kate_17_FU, 
+                                    Ollie_17_FU))) %>%
+  mutate(s18_BL_iTHR = mean(c(Lida_18_BL, 
+                                   Niran_18_BL))) %>%
+  mutate(s18_FU_iTHR = mean(c(Ollie_18_FU, 
+                                   Niran_18_FU))) %>%
+  mutate(s19_BL_iTHR = mean(c(Anna_19_BL, 
+                                   Ollie_19_BL))) %>%
+  mutate(s19_FU_iTHR = mean(c(Ollie_19_FU, 
+                                   Kate_19_FU))) %>%
+  mutate(s20_BL_iTHR = mean(c(Ollie_20_BL, 
+                                     Niran_20_BL))) %>%
+  mutate(s20_FU_iTHR = mean(c(Ollie_20_FU, 
+                                     Niran_20_FU))) %>%
+  mutate(s1_BL_Ctrl = mean(c(Anna_1_BL, Niran_1_BL,
+                                   Lida_1_BL, Ollie_1_BL))) %>%
+  mutate(s1_FU_Ctrl = mean(c(Ollie_1_FU,
+                                   Niran_1_FU))) %>%
+  mutate(s2_BL_Ctrl = mean(c(Niran_2_BL, 
+                                   Lida_2_BL))) %>%
+  mutate(s2_FU_Ctrl = mean(c(Lida_2_FU, 
+                                   Niran_2_FU))) %>%
+  mutate(s3_BL_Ctrl = mean(c(Niran_3_BL,
+                                   Lida_3_BL))) %>%
+  mutate(s3_FU_Ctrl = mean(c(Niran_3_FU,
+                                   Lida_3_FU))) %>%
+  mutate(s4_BL_Ctrl = mean(c(Anna_4_BL,
+                                    Ollie_4_BL))) %>%
+  mutate(s4_FU_Ctrl = mean(c(Anna_Kate_4_FU,
+                                    Ollie_4_FU))) %>%
+  mutate(s5_BL_Ctrl = mean(c(Lida_5_BL,
+                                  Niran_5_BL))) %>%
+  mutate(s5_FU_Ctrl = mean(c(Ollie_5_FU,
+                                  Niran_5_FU), na.rm = TRUE)) %>%
+  mutate(s6_BL_Ctrl = mean(c(Anna_6_BL, Lida_6_BL,
+                                     Niran_6_BL, Ollie_6_BL))) %>%
+  mutate(s6_FU_Ctrl = mean(c(Kate_6_FU, 
+                                     Ollie_6_FU))) %>%
+  mutate(s7_BL_Ctrl = mean(c(Anna_7_BL,
+                                   Ollie_7_BL))) %>%
+  mutate(s7_FU_Ctrl = mean(c(Ollie_7_FU, 
+                                   Niran_7_FU))) %>%
+  mutate(s8_BL_Ctrl = mean(c(Lida_8_BL,
+                                Niran_8_BL), na.rm = TRUE)) %>%
+  mutate(s8_FU_Ctrl = mean(c(Ollie_8_FU,
+                                Niran_8_FU))) %>%
+  mutate(s9_BL_Ctrl = mean(c(Anna_9_BL,
+                                     Ollie_9_BL))) %>%
+  mutate(s9_FU_Ctrl = mean(c(Ollie_9_FU,
+                                     Niran_9_FU))) %>%
+  mutate(s10_BL_Ctrl = mean(c(Anna_10_BL,
+                                    Ollie_10_BL))) %>%
+  mutate(s10_FU_Ctrl = mean(c(Ollie_10_FU,
+                                    Niran_10_FU))) %>%
+  dplyr::select(iTHRIVE_principle, Level, s11_BL_iTHR, s11_FU_iTHR, s12_BL_iTHR, 
+                s12_FU_iTHR, s13_BL_iTHR, s13_FU_iTHR, s14_BL_iTHR, 
+                s14_FU_iTHR, s15_BL_iTHR, s15_FU_iTHR,s16_BL_iTHR,
+                s16_FU_iTHR, s17_BL_iTHR, s17_FU_iTHR, s18_BL_iTHR,
+                s18_FU_iTHR, s19_BL_iTHR, s19_FU_iTHR, s20_BL_iTHR,
+                s20_FU_iTHR, s1_BL_Ctrl, s1_FU_Ctrl, 
+                s2_BL_Ctrl, s2_FU_Ctrl,
+                s3_BL_Ctrl, s3_FU_Ctrl, s4_BL_Ctrl, 
+                s4_FU_Ctrl, s5_BL_Ctrl, 
+                s5_FU_Ctrl, s6_BL_Ctrl, s6_FU_Ctrl, 
+                s7_BL_Ctrl, s7_FU_Ctrl,
+                s8_BL_Ctrl, s8_FU_Ctrl, s9_BL_Ctrl, s9_FU_Ctrl, 
+                s10_BL_Ctrl, s10_FU_Ctrl)
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # 1.2 Sites with missing scores
-## Bexley FU, Stoke BL NAs
+## site11 FU, site8 BL NAs
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-print(Fidelity1[,c("Level", "Bexley_FU_iTHR", "Norfolk_FU_Ctrl", "Stoke_BL_Ctrl")], n = 100, na.print = "NA")
+print(Fidelity1[,c("Level", "s11_FU_iTHR", "s8_BL_Ctrl")], n = 100, na.print = "NA")
 
-## Bexley FU all level 3, Stoke BL all level 2
+## site11 FU all level 3, site8 BL all level 2
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # 1.3 Wide to long
@@ -181,28 +180,28 @@ fidelity_by_site_total <- (
 ## mean after taking mean difference from time pair
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-bexley <- Fidelity1[, c("Level", "Bexley_BL_iTHR", "Bexley_FU_iTHR")]
-bexley$diff <- bexley$Bexley_FU_iTHR - bexley$Bexley_BL_iTHR
+site11 <- Fidelity1[, c("Level", "s11_BL_iTHR", "s11_FU_iTHR")]
+site11$diff <- site11$s11_FU_iTHR - site11$s11_BL_iTHR
 
-mean(bexley$diff, na.rm = TRUE)
+mean(site11$diff, na.rm = TRUE)
 # mean difference between FU and BL = 0.157
 
-bexleyFU <- bexley$Bexley_BL_iTHR + 0.157
+site11FU <- site11$s11_BL_iTHR + 0.157
 
-stoke <- Fidelity1[, c("Level", "Stoke_BL_Ctrl", "Stoke_FU_Ctrl")]
-stoke$diff <- stoke$Stoke_FU_Ctrl - stoke$Stoke_BL_Ctrl
+site8 <- Fidelity1[, c("Level", "s8_BL_Ctrl", "s8_FU_Ctrl")]
+site8$diff <- site8$s8_FU_Ctrl - site8$s8_BL_Ctrl
 
-mean(stoke$diff, na.rm = TRUE)
+mean(site8$diff, na.rm = TRUE)
 # mean difference between FU and BL = 0.112
 
-stokeBL <- stoke$Stoke_FU_Ctrl - 0.112
+site8BL <- site8$s8_FU_Ctrl - 0.112
 
 # replace missing
 fidelity_by_site_fill <- fidelity_by_site
-fidelity_by_site_fill$fidelity[fidelity_by_site_fill$site == "Bexley" & 
-                                 fidelity_by_site_fill$time == "FU"] <- bexleyFU
-fidelity_by_site_fill$fidelity[fidelity_by_site_fill$site == "Stoke" & 
-                                 fidelity_by_site_fill$time == "BL"] <- stokeBL
+fidelity_by_site_fill$fidelity[fidelity_by_site_fill$site == "11" & 
+                                 fidelity_by_site_fill$time == "FU"] <- site11FU
+fidelity_by_site_fill$fidelity[fidelity_by_site_fill$site == "8" & 
+                                 fidelity_by_site_fill$time == "BL"] <- site8BL
 
 # corrected summed scores
 fidelity_by_site_fill_total <- (

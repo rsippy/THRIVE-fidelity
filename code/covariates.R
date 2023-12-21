@@ -12,38 +12,7 @@
 ## 1.1 Create lookup table for LSOAs within CCGs
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-lfile <- list.files("data/", "Lower_Layer")
-
-lsoas <- read.csv(paste0("data/",lfile), header = TRUE, stringsAsFactors = FALSE)
-
-# add names of sites
-lsoas$site <- NA
-lsoas$site[grep("Bexley",lsoas$CCG16NM)] <- "Bexley"
-lsoas$site[grep("Bradford",lsoas$CCG16NM)] <- "Bradford"
-lsoas$site[grep("Airedale",lsoas$CCG16NM)] <- "Bradford"
-lsoas$site[grep("Cambridge",lsoas$CCG16NM)] <- "CambPeter"
-lsoas$site[grep("Camden",lsoas$CCG16NM)] <- "Camden"
-lsoas$site[grep("Ipswich",lsoas$CCG16NM)] <- "EastSuff"
-lsoas$site[grep("North Hertfordshire",lsoas$CCG16NM)] <- "Herts"
-lsoas$site[grep("Herts Valley",lsoas$CCG16NM)] <- "Herts"
-lsoas$site[grep("Lewisham",lsoas$CCG16NM)] <- "Lewisham"
-lsoas$site[grep("Luton",lsoas$CCG16NM)] <- "Luton"
-lsoas$site[grep("Manchester",lsoas$CCG16NM)] <- "MancSal"
-lsoas$site[grep("Salford",lsoas$CCG16NM)] <- "MancSal"
-lsoas$site[grep("Corby",lsoas$CCG16NM)] <- "NeneCorby"
-lsoas$site[grep("Nene",lsoas$CCG16NM)] <- "NeneCorby"
-lsoas$site[grep("Norfolk",lsoas$CCG16NM)] <- "Norfolk"
-lsoas$site[grep("Norwich",lsoas$CCG16NM)] <- "Norfolk"
-lsoas$site[grep("Yarmouth",lsoas$CCG16NM)] <- "Norfolk"
-lsoas$site[grep("Portsmouth",lsoas$CCG16NM)] <- "Portsmouth"
-lsoas$site[grep("Southampton",lsoas$CCG16NM)] <- "SouthHam"
-lsoas$site[grep("Stockport",lsoas$CCG16NM)] <- "Stockport"
-lsoas$site[grep("Stoke",lsoas$CCG16NM)] <- "Stoke"
-lsoas$site[grep("Sunderland",lsoas$CCG16NM)] <- "Sunderland"
-lsoas$site[grep("Tower Hamlets",lsoas$CCG16NM)] <- "TowerHam"
-lsoas$site[grep("Waltham Forest",lsoas$CCG16NM)] <- "WalthamF"
-lsoas$site[grep("Warrington",lsoas$CCG16NM)] <- "Warrington"
-lsoas$site[grep("Worcestershire",lsoas$CCG16NM)] <- "Worcester"
+lsoas <- read.csv("lsoas.csv", na.strings = "NA")
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ## 1.2 IMD 2019
@@ -56,14 +25,14 @@ imd <- read.csv(paste0("data/",ifile), header = TRUE, stringsAsFactors = FALSE)
 colnames(imd)[2] <- "LSOA11CD"
 
 # merge ccg, site names, imd
-imd_site <- merge(lsoas[,c(1,5,9)], imd, "LSOA11CD")
+imd_site <- merge(lsoas, imd, "LSOA11CD")
 
 # apply population weights to IMDScore
 imd_site$wtd_IMDScore <- imd_site$IMDScore * imd_site$TotPop
 
 # site or CCG as area of interest 
 imd_site$aoi <- imd_site$site
-imd_site$aoi[is.na(imd_site$aoi)] <- imd_site$CCG16NM[is.na(imd_site$aoi)]
+imd_site$aoi[is.na(imd_site$aoi)] <- imd_site$CCG16CD[is.na(imd_site$aoi)]
 
 #sum scores and populations by site
 site_level <- aggregate(imd_site[,c(62,69)], list(aoi = imd_site$aoi), sum)
@@ -101,14 +70,14 @@ imd_pop$Total.population..mid.2012..excluding.prisoners. <- gsub(",", "", imd_po
 imd_pop$TotPop <- as.numeric(imd_pop$Total.population..mid.2012..excluding.prisoners.)
 
 # merge ccg, site names, imd
-imd15 <- merge(lsoas[,c(1,5,9)], imd_pop[,c(1,6,22)], "LSOA11CD")
+imd15 <- merge(lsoas, imd_pop[,c(1,6,22)], "LSOA11CD")
 
 # apply population weights to IMDScore
 imd15$wtd_IMDScore <- imd15$Index.of.Multiple.Deprivation..IMD..Score * imd15$TotPop
 
 # site or CCG as area of interest 
 imd15$aoi <- imd15$site
-imd15$aoi[is.na(imd15$aoi)] <- imd15$CCG16NM[is.na(imd15$aoi)]
+imd15$aoi[is.na(imd15$aoi)] <- imd15$CCG16CD[is.na(imd15$aoi)]
 
 #sum scores and populations by site
 imd_aoi <- aggregate(imd15[,5:6], list(aoi = imd15$aoi), sum)
@@ -170,6 +139,7 @@ covs2$funds[covs2$time == "BL"] <- cov1519$funds16s
 covs2$funds[covs2$time == "FU"] <- cov1519$funds19s
 covs2$IMD[covs2$time == "BL"] <- cov1519$rank15
 covs2$IMD[covs2$time == "FU"] <- cov1519$rank19
+covs2$site <- paste0("s", covs2$site)
 
 load("fidelity_by_site_fill_total.RData")
 load("fidelity_by_site_fill_level.RData")
