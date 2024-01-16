@@ -9,13 +9,11 @@
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 library(tableone)
-library(foreign)
 library(nnet)
 library(ggplot2)
 library(reshape2)
-library(splines)
-library(rms)
-library(MNLpred)
+# library(splines)
+# library(rms)
 
 load("fidelity_covars.RData")
 
@@ -67,15 +65,15 @@ ml2 <- multinom(group ~ popd + funds + IMD + nccgs + compliance, data = fidelity
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # percentile values for knot placement
-funk <- unname(quantile(fidelity_covars$funds, probs = c(0.1,0.5,0.9)))
-imdk <- unname(quantile(fidelity_covars$IMD, probs = c(0.1,0.5,0.9)))
-pdk <- unname(quantile(fidelity_covars$popd, probs = c(0.1,0.5,0.9)))
+# funk <- unname(quantile(fidelity_covars$funds, probs = c(0.1,0.5,0.9)))
+# imdk <- unname(quantile(fidelity_covars$IMD, probs = c(0.1,0.5,0.9)))
+# pdk <- unname(quantile(fidelity_covars$popd, probs = c(0.1,0.5,0.9)))
 
 # per Harrell, n < 100 so replace first and last knot locations with
 # 5th largest and 5th smallest values
-funk[c(1,3)] <- c(sort(fidelity_covars$funds, partial = 5)[5], sort(fidelity_covars$funds, partial = 35)[35])
-imdk[c(1,3)] <- c(sort(fidelity_covars$IMD, partial = 5)[5], sort(fidelity_covars$IMD, partial = 35)[35])
-pdk[c(1,3)] <- c(sort(fidelity_covars$popd, partial = 5)[5], sort(fidelity_covars$popd, partial = 35)[35])
+# funk[c(1,3)] <- c(sort(fidelity_covars$funds, partial = 5)[5], sort(fidelity_covars$funds, partial = 35)[35])
+# imdk[c(1,3)] <- c(sort(fidelity_covars$IMD, partial = 5)[5], sort(fidelity_covars$IMD, partial = 35)[35])
+# pdk[c(1,3)] <- c(sort(fidelity_covars$popd, partial = 5)[5], sort(fidelity_covars$popd, partial = 35)[35])
 
 # results in 0, 1 probability predictions
 # fml <- multinom(group ~ rcs(funds, knots = funk) + rcs(IMD, knots = imdk) + 
